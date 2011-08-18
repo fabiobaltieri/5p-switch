@@ -38,3 +38,11 @@ To program with the default configuration, run:
 Fuses can be configured running:
 
   make fuse 
+
+Hardware
+--------
+
+The switch can be configured in unmanaged mode by not shorting any jumper.
+
+To configure the switch in SPI slave mode, PS[1:0] have to be set to 10, so
+just short the pins 1 and 2 of SJ2.
