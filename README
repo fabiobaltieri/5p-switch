@@ -1,6 +1,7 @@
 Five Port Managed Ethernet Switch
 =================================
 
+
 This project is a five port managed switch based on a Micrel KSZ8995 and an
 Atmel ATMega168 microcontroller.
 
@@ -14,6 +15,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 Contents
 --------
+
 COPYING     text version of the GPL
 README      this file
 firmware/   source directory for firmware files
@@ -21,7 +23,9 @@ hardware/   source directory for the hardware design files
 
 Firmware
 --------
-Building requires an avr-gcc toolchain, in the firmware/ directory, to build run:
+
+Building requires an avr-gcc toolchain, in the firmware/ directory, to build
+run:
 
   make
 
