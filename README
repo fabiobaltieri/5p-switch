@@ -2,7 +2,7 @@ Five Port Managed Ethernet Switch
 =================================
 
 
-This project is a five port managed switch based on a Micrel KSZ8995 and an
+This project is a five port managed switch based on a Micrel KSZ8995M and an
 Atmel ATMega168 microcontroller.
 
 License
