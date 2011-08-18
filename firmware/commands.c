@@ -303,6 +303,7 @@ static uint8_t status (uint8_t argc, char ** argv)
  *** others ***
  */
 
+#if TEST
 static uint8_t test (uint8_t argc, char ** argv)
 {
   uint8_t i;
@@ -314,6 +315,7 @@ static uint8_t test (uint8_t argc, char ** argv)
 
   return 0;
 }
+#endif
 
 /*
  *** service ***

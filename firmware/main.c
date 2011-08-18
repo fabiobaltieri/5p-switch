@@ -48,6 +48,7 @@ static void str_to_argc_argv (char * buf, uint8_t * argc, char ** argv, uint8_t 
   }
 }
 
+#if START_MODE_A
 static void start_mode_A (void)
 {
   //####################
@@ -90,6 +91,7 @@ static void start_mode_A (void)
 
   spi_write(0x01, 0x01); // start switch
 }
+#endif
 
 /*
  * Parse one command
@@ -101,7 +103,10 @@ static void interactive (void)
   char buf[CMDBUFSZ];
   char c;
 
-  //start_mode_A();
+#if START_MODE_A
+  start_mode_A();
+#endif
+
   spi_write(0x01, 0x01); // start switch
 
   printf("sw> ");
