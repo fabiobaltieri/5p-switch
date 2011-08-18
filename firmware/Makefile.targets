@@ -27,6 +27,9 @@ load: $(targets)
 	  $(AVRDUDE) $(AVRDUDEFLAGS) -Uflash:w:main_text.hex -Ueeprom:w:main_eeprom.hex ; \
 	fi
 
+fuse:
+	$(AVRDUDE) $(AVRDUDEFLAGS) -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m
+
 dfu: $(targets)
 	$(DFUPROGRAMMER) $(DFU_FLAGS) erase
 	$(DFUPROGRAMMER) $(DFU_FLAGS) flash main_text.hex

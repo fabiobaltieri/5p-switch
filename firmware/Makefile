@@ -16,6 +16,10 @@ LDFLAGS	=
 AVRDUDEFLAGS = -c usbasp -p m168
 #AVRDUDEFLAGS = -c usbasp -p m8
 
+# for ATMega168
+LFUSE=0xe2
+HFUSE=0xdd
+
 targets	= main.elf main_text.hex main_eeprom.hex
 objects	= main.o uart.o spi.o commands.o
 deps	= Makefile defines.h
