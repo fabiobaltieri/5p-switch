@@ -20,4 +20,4 @@ targets	= main.elf main_text.hex main_eeprom.hex
 objects	= main.o uart.o spi.o commands.o
 deps	= Makefile defines.h
 
-include ../avr-common/Makefile.targets
+include Makefile.targets
