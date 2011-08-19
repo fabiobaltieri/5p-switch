@@ -42,6 +42,9 @@ Fuses can be configured running:
 Hardware
 --------
 
+All hardware files (schematic, layout and libraries) are in CadSoft Eagle
+format.
+
 The switch can be configured in unmanaged mode by not shorting any jumper.
 
 To configure the switch in SPI slave mode, PS[1:0] have to be set to 10, so
