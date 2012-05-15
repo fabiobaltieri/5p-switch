@@ -67,28 +67,26 @@ static uint16_t dump_dm(uint16_t off, uint8_t *buf, uint16_t size)
 	count = ((((data[1] << 8) | data[0]) >> 2) & 0x3ff) + 1;
 
 	/* dump table */
-	i = 0;
-	while (off < count) {
+	for (i = 0; i < size / 8; i++) {
 		spi_write(IAC_RD | IAC_DM | ((off >> 8) & 0x03), IAC0);
 		spi_write(off & 0xff, IAC1);
 
 		do {
-			data[0] = spi_read(IDR6);
+			buf[6] = spi_read(IDR6);
 		} while (data[0] & 0x80);
 
-		buf[7 + i * 8] = 0x00;
-		buf[6 + i * 8] = spi_read(IDR7);
-		buf[5 + i * 8] = spi_read(IDR5);
-		buf[4 + i * 8] = spi_read(IDR4);
-		buf[3 + i * 8] = spi_read(IDR3);
-		buf[2 + i * 8] = spi_read(IDR2);
-		buf[1 + i * 8] = spi_read(IDR1);
-		buf[0 + i * 8] = spi_read(IDR0);
+		buf[7] = spi_read(IDR7);
+		buf[5] = spi_read(IDR5);
+		buf[4] = spi_read(IDR4);
+		buf[3] = spi_read(IDR3);
+		buf[2] = spi_read(IDR2);
+		buf[1] = spi_read(IDR1);
+		buf[0] = spi_read(IDR0);
 
+		buf += 8;
 		off++;
-		i++;
 
-		if (!(i < size / 8))
+		if (off > count)
 			break;
 	}
 
