@@ -62,6 +62,7 @@ fuse:
 	$(AVRDUDE) $(AVRDUDEFLAGS) -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m
 
 boot: $(targets)
+	usbtool -P 5p-switch  control out vendor device 0xff 0 0; sleep 1.5
 	$(BOOTLOADER) $(BOOTLOADER_FLAGS)
 
 .PHONY: clean
