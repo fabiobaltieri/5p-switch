@@ -75,7 +75,7 @@ static uint16_t dump_dm(uint16_t off, uint8_t *buf, uint16_t size)
 
 		do {
 			buf[6] = spi_read(IDR6);
-		} while (data[0] & 0x80);
+		} while (buf[6] & 0x80);
 
 		buf[7] = spi_read(IDR7);
 		buf[5] = spi_read(IDR5);
