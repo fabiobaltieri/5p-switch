@@ -75,12 +75,12 @@ static void ksz_dump_dm(usb_dev_handle *handle)
 				      USB_ENDPOINT_IN,
 				      CUSTOM_RQ_GET_DM,
 				      0, offset, (char *)buf, sizeof(buf), 1000);
-		
+
 		if (ret < 0) {
 			printf("usb_control_msg: %s\n", usb_strerror());
 			exit(1);
 		}
-		
+
 		ptr = buf;
 		for (i = 0; i < ret / 8; i++) {
 			printf("%d\t%d\t%d\t%02x:%02x:%02x:%02x:%02x:%02x\n",
@@ -112,12 +112,12 @@ static void ksz_dump_vlan(usb_dev_handle *handle)
 			      USB_ENDPOINT_IN,
 			      CUSTOM_RQ_GET_VLAN,
 			      0, 0, (char *)buf, sizeof(buf), 1000);
-	
+
 	if (ret < 0) {
 		printf("usb_control_msg: %s\n", usb_strerror());
 		exit(1);
 	}
-	
+
 	if (ret != sizeof(buf)) {
 		printf("%s: short transfer\n", __func__);
 		return;
