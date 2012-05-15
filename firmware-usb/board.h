@@ -1,8 +1,8 @@
 /* LEDs */
 
-#define LED_A_PORT    PORTC
-#define LED_A_DDR     DDRC
-#define LED_A         PC3
+#define LED_A_PORT    PORTD
+#define LED_A_DDR     DDRD
+#define LED_A         PD6
 
 #define LED_B_PORT    PORTD
 #define LED_B_DDR     DDRD
