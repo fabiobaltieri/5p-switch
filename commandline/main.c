@@ -136,6 +136,83 @@ static void ksz_dump_vlan(usb_dev_handle *handle)
 	}
 }
 
+static char *mib_names[32] = {
+	"RxLoPriorityByte",
+	"RxHiPriorityByte",
+	"RxUndersizePkt",
+	"RxFragments",
+	"RxOversize",
+	"RxJabbers",
+	"RxSymbolError",
+	"RxCRCerror",
+	"RxAlignmentError",
+	"RxControl8808Pkts",
+	"RxPausePkts",
+	"RxBroadcast",
+	"RxMulticast",
+	"RxUnicast",
+	"Rx64Octets",
+	"Rx65to127Octets",
+	"Rx128to255Octets",
+	"Rx256to511Octets",
+	"Rx512to1023Octets",
+	"Rx1024to1522Octets",
+	"TxLoPriorityByte",
+	"TxHiPriorityByte",
+	"TxLateCollision",
+	"TxPausePkts",
+	"TxBroadcastPkts",
+	"TxMulticastPkts",
+	"TxUnicastPkts",
+	"TxDeferred",
+	"TxTotalCollision",
+	"TxExcessiveCollision",
+	"TxSingleCollision",
+	"TxMultipleCollision",
+};
+
+static void ksz_dump_mib(usb_dev_handle *handle)
+{
+	int ret;
+	int i, j;
+	uint32_t buf[N_PORTS][32];
+	uint32_t val;
+
+	for (i = 0; i < N_PORTS; i++) {
+		ret = usb_control_msg(handle,
+				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+				      USB_ENDPOINT_IN,
+				      CUSTOM_RQ_GET_MIB,
+				      0, i, (char *)buf[i], sizeof(*buf), 1000);
+
+		if (ret < 0) {
+			printf("usb_control_msg: %s\n", usb_strerror());
+			exit(1);
+		}
+
+		if (ret != sizeof(*buf)) {
+			printf("%s: short transfer\n", __func__);
+			return;
+		}
+	}
+
+	printf("                           port0"
+	       "       port1"
+	       "       port2"
+	       "       port3"
+	       "       port4\n");
+	for (j = 0; j < 32; j++) {
+		printf("%20s", mib_names[j]);
+		for (i = 0; i < N_PORTS; i++) {
+			val = buf[i][j];
+			printf(" %s%10d",
+			       val & 0x80000000 ? "*" : " ",
+			       val & 0x3fffffff);
+		}
+		printf("\n");
+	}
+}
+
 static void send_reset(usb_dev_handle *handle)
 {
 	int ret;
@@ -197,6 +274,8 @@ int main(int argc, char **argv)
 	ksz_dump_dm(handle);
 	printf("\n");
 	ksz_dump_vlan(handle);
+	printf("\n");
+	ksz_dump_mib(handle);
 
 	usb_close(handle);
 
