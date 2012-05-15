@@ -15,99 +15,25 @@
 #define GC5 0x07 /* broadcast storm protection rate */
 #define GC9 0x0b /* 1 LED mode, 0 special TPID */
 
-/* Port 1 Control Registers */
-#define P1C0  0x10 /* 7 broadacast storm protection, 5 802.1p priority, 4 port based priority */
-                   /* 2 tag insertion, 1 tag removal, 0 priority enable */
-#define P1C1  0x11 /* 4-0 port VLAN membership */
-#define P1C2  0x12 /* 6 ingress VLAN filtering, 5 discard non-PVID, 2 txen, 1 rxen, 0 learnen */
-#define P1C3  0x13 /* default tag[15:8] */
-#define P1C4  0x14 /* default tag[7:0]  */
-#define P1C5  0x15 /* tx high priority rate LSB */
-#define P1C6  0x16 /* tx low priority rate LSB */
-#define P1C7  0x17 /* tx priority rate MSB */
-#define P1C8  0x18 /* rx high priority rate LSB */
-#define P1C9  0x19 /* rx low priority rate LSB */
-#define P1C10 0x1a /* rx priority rate MSB */
-#define P1C11 0x1b /* priority... */
-#define P1C12 0x1c /* 7 auto negotiation, 6 force speed, 5 force duplex, 4-0 advertise... */
-#define P1C13 0x1d /* 7 LED, 3 power down, 2 disable auto mdi-x, 1 force mdi */
-#define P1C14 0x1f
-/* Port 2 Control Registers */
-#define P2C0  0x20
-#define P2C1  0x21
-#define P2C2  0x22
-#define P2C3  0x23
-#define P2C4  0x24
-#define P2C5  0x25
-#define P2C6  0x26
-#define P2C7  0x27
-#define P2C8  0x28
-#define P2C9  0x29
-#define P2C10 0x2a
-#define P2C11 0x2b
-#define P2C12 0x2c
-#define P2C13 0x2d
-#define P2C14 0x2f
-/* Port 3 Control Registers */
-#define P3C0  0x30
-#define P3C1  0x31
-#define P3C2  0x32
-#define P3C3  0x33
-#define P3C4  0x34
-#define P3C5  0x35
-#define P3C6  0x36
-#define P3C7  0x37
-#define P3C8  0x38
-#define P3C9  0x39
-#define P3C10 0x3a
-#define P3C11 0x3b
-#define P3C12 0x3c
-#define P3C13 0x3d
-#define P3C14 0x3f
-/* Port 4 Control Registers */
-#define P4C0  0x40
-#define P4C1  0x41
-#define P4C2  0x42
-#define P4C3  0x43
-#define P4C4  0x44
-#define P4C5  0x45
-#define P4C6  0x46
-#define P4C7  0x47
-#define P4C8  0x48
-#define P4C9  0x49
-#define P4C10 0x4a
-#define P4C11 0x4b
-#define P4C12 0x4c
-#define P4C13 0x4d
-#define P4C14 0x4f
-/* Port 5 Control Registers */
-#define P5C0  0x50
-#define P5C1  0x51
-#define P5C2  0x52
-#define P5C3  0x53
-#define P5C4  0x54
-#define P5C5  0x55
-#define P5C6  0x56
-#define P5C7  0x57
-#define P5C8  0x58
-#define P5C9  0x59
-#define P5C10 0x5a
-#define P5C11 0x5b
-#define P5C12 0x5c
-#define P5C13 0x5d
-#define P5C14 0x5f
+/* Port x Control Registers */
+#define PxC0(x)  (0x10 + x * 0x10)
+#define PxC1(x)  (0x11 + x * 0x10)
+#define PxC2(x)  (0x12 + x * 0x10)
+#define PxC3(x)  (0x13 + x * 0x10)
+#define PxC4(x)  (0x14 + x * 0x10)
+#define PxC5(x)  (0x15 + x * 0x10)
+#define PxC6(x)  (0x16 + x * 0x10)
+#define PxC7(x)  (0x17 + x * 0x10)
+#define PxC8(x)  (0x18 + x * 0x10)
+#define PxC9(x)  (0x19 + x * 0x10)
+#define PxC10(x) (0x1a + x * 0x10)
+#define PxC11(x) (0x1b + x * 0x10)
+#define PxC12(x) (0x1c + x * 0x10)
+#define PxC13(x) (0x1d + x * 0x10)
+#define PxC14(x) (0x1f + x * 0x10)
 
-
-/* Port 1 Status Registers */
-#define P1S0 0x1e /* 7 mdi-x status, 6 AN done, 6 link good, 4-0 partner flow control */
-/* Port 2 Status Registers */
-#define P2S0 0x2e
-/* Port 3 Status Registers */
-#define P3S0 0x3e
-/* Port 4 Status Registers */
-#define P4S0 0x4e
-/* Port 5 Status Registers */
-#define P5S0 0x5e
+/* Port x Status Registers */
+#define PxS0(x) (0x1e + x * 0x10)
 
 /* TOS Priority Control Registers */
 
