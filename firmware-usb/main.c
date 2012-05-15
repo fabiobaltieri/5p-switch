@@ -60,10 +60,13 @@ int __attribute__((noreturn)) main(void)
 	usbInit();
 	usbDeviceDisconnect();
 
-	i = 0;
-	while (--i) {
+	for (i = 0; i < 6; i++) {
 		wdt_reset();
-		_delay_ms(1);
+
+		led_a_toggle();
+		led_b_toggle();
+
+		_delay_ms(50);
 	}
 
 	usbDeviceConnect();
