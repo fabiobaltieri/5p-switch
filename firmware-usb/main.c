@@ -11,6 +11,8 @@
 #include "spi.h"
 #include "ksz8995ma.h"
 
+static uint8_t buf[64];
+
 static void reset_cpu(void)
 {
 	wdt_disable();
@@ -23,29 +25,26 @@ static void reset_cpu(void)
 usbMsgLen_t usbFunctionSetup(uint8_t data[8])
 {
 	struct usbRequest *rq = (void *)data;
-	static uchar dataBuffer[4];
 
 	led_b_toggle();
 
-	if (rq->bRequest == CUSTOM_RQ_ECHO) {
-		dataBuffer[0] = rq->wValue.bytes[0];
-		dataBuffer[1] = rq->wValue.bytes[1];
-		dataBuffer[2] = rq->wIndex.bytes[0];
-		dataBuffer[3] = rq->wIndex.bytes[1];
-		usbMsgPtr = dataBuffer;
-		return 4;
-	} else if (rq->bRequest == CUSTOM_RQ_SET_STATUS) {
-		if (rq->wValue.bytes[0] & 0x01)
-			led_a_on()
-		else
-			led_a_off()
-	} else if (rq->bRequest == CUSTOM_RQ_GET_STATUS) {
-		dataBuffer[0] = 0xca;
-		usbMsgPtr = dataBuffer;
+	if ((rq->bmRequestType & USBRQ_RCPT_MASK) != USBRQ_RCPT_DEVICE &&
+	    (rq->bmRequestType & USBRQ_TYPE_MASK) != USBRQ_TYPE_VENDOR)
+		return 0;
+
+	switch (rq->bRequest) {
+	case CUSTOM_RQ_READ_REG:
+		buf[0] = spi_read(rq->wIndex.bytes[0]);
+		usbMsgPtr = buf;
 		return 1;
-	} else if (rq->bRequest == CUSTOM_RQ_RESET) {
+	case CUSTOM_RQ_WRITE_REG:
+		spi_write(rq->wValue.bytes[0], rq->wIndex.bytes[0]);
+		return 0;
+	case CUSTOM_RQ_RESET:
 		reset_cpu();
+		break;
 	}
+
 	return 0;
 }
 
@@ -74,7 +73,7 @@ int __attribute__((noreturn)) main(void)
 	}
 
 	/* start switch */
-	spi_write(ID1, 0x01);
+	spi_write(0x01, ID1);
 
 	usbDeviceConnect();
 
