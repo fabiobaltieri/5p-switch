@@ -38,10 +38,12 @@ static uint16_t dump_vlan(uint8_t *buf, uint16_t size)
 		spi_write(IAC_RD | IAC_VLAN | ((i >> 8) & 0x03), IAC0);
 		spi_write(i & 0xff, IAC1);
 
-		buf[3 + i * 4] = 0x00;
-		buf[2 + i * 4] = spi_read(IDR2);
-		buf[1 + i * 4] = spi_read(IDR1);
-		buf[0 + i * 4] = spi_read(IDR0);
+		buf[3] = 0x00;
+		buf[2] = spi_read(IDR2);
+		buf[1] = spi_read(IDR1);
+		buf[0] = spi_read(IDR0);
+
+		buf += 4;
 	}
 
 	return 16 * 4;
