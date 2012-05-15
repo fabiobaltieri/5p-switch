@@ -26,7 +26,7 @@ HFUSE = 0xdd
 #LOCK = -U lock:w:0x2f:m
 
 targets	= main.elf main_text.hex main_eeprom.hex
-objects	= main.o usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o
+objects	= main.o spi.o usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o
 deps	= Makefile
 
 # Targets

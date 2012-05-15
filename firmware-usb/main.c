@@ -1,5 +1,3 @@
-#include "board.h"
-
 #include <avr/io.h>
 #include <avr/wdt.h>
 #include <avr/interrupt.h>
@@ -8,6 +6,10 @@
 #include "usbdrv.h"
 
 #include "requests.h"
+
+#include "board.h"
+#include "spi.h"
+#include "ksz8995ma.h"
 
 static void reset_cpu(void)
 {
@@ -51,6 +53,8 @@ int __attribute__((noreturn)) main(void)
 {
 	uint8_t i;
 
+	spi_init();
+
 	led_init();
 	led_a_off();
 	led_b_off();
@@ -68,6 +72,9 @@ int __attribute__((noreturn)) main(void)
 
 		_delay_ms(50);
 	}
+
+	/* start switch */
+	spi_write(ID1, 0x01);
 
 	usbDeviceConnect();
 

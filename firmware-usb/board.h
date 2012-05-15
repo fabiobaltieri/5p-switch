@@ -21,3 +21,15 @@
 		LED_A_DDR |= _BV(LED_A);	\
 		LED_B_DDR |= _BV(LED_B);	\
 	} while (0);
+
+/* SPI */
+
+#define SPI_DDR  DDRB
+#define SPI_PORT PORTB
+#define SPI_SCK  PB5
+#define SPI_MISO PB4
+#define SPI_MOSI PB3
+#define SPI_CS   PB2
+
+#define spi_cs_h() SPI_PORT |=  _BV(SPI_CS)
+#define spi_cs_l() SPI_PORT &= ~_BV(SPI_CS)
