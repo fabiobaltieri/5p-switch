@@ -43,7 +43,7 @@ uint8_t spi_io(uint8_t data)
 	return ret;
 }
 
-void spi_write_block(uint8_t addr, uint8_t * buf, uint8_t count)
+void spi_write_block(uint8_t addr, uint8_t *buf, uint8_t count)
 {
 	uint8_t i;
 
@@ -59,7 +59,7 @@ void spi_write_block(uint8_t addr, uint8_t * buf, uint8_t count)
 	spi_cs_h();
 }
 
-void spi_read_block(uint8_t addr, uint8_t * buf, uint8_t count)
+void spi_read_block(uint8_t addr, uint8_t *buf, uint8_t count)
 {
 	uint8_t i;
 
@@ -75,7 +75,7 @@ void spi_read_block(uint8_t addr, uint8_t * buf, uint8_t count)
 	spi_cs_h();
 }
 
-void spi_write(uint8_t addr, uint8_t data)
+void spi_write(uint8_t value, uint8_t addr)
 {
 	spi_cs_l();
 
@@ -83,7 +83,7 @@ void spi_write(uint8_t addr, uint8_t data)
 
 	spi_io(addr);
 
-	spi_io(data);
+	spi_io(value);
 
 	spi_cs_h();
 }
