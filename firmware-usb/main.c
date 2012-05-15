@@ -27,6 +27,54 @@ static void reset_cpu(void)
 	for (;;);
 }
 
+static uint16_t dump_dm(uint16_t off, uint8_t *buf, uint16_t size)
+{
+	uint16_t count;
+	uint16_t i;
+	uint8_t data[2];
+
+	/* get number of entries */
+	spi_write(IAC_RD | IAC_DM | ((off >> 8) & 0x03), IAC0);
+	spi_write((off & 0xff), IAC1);
+
+	data[1] = spi_read(IDR8);
+	data[0] = spi_read(IDR7);
+
+	/* table empty */
+	if (data[1] & 0x10)
+		return 0;
+
+	count = ((((data[1] << 8) | data[0]) >> 2) & 0x3ff) + 1;
+
+	/* dump table */
+	i = 0;
+	while (off < count) {
+		spi_write(IAC_RD | IAC_DM | ((off >> 8) & 0x03), IAC0);
+		spi_write(off & 0xff, IAC1);
+
+		do {
+			data[0] = spi_read(IDR6);
+		} while (data[0] & 0x80);
+
+		buf[7 + i * 8] = 0x00;
+		buf[6 + i * 8] = spi_read(IDR7);
+		buf[5 + i * 8] = spi_read(IDR5);
+		buf[4 + i * 8] = spi_read(IDR4);
+		buf[3 + i * 8] = spi_read(IDR3);
+		buf[2 + i * 8] = spi_read(IDR2);
+		buf[1 + i * 8] = spi_read(IDR1);
+		buf[0 + i * 8] = spi_read(IDR0);
+
+		off++;
+		i++;
+
+		if (!(i < size / 8))
+			break;
+	}
+
+	return i * 8;
+}
+
 static uint8_t dump_port_status(uint8_t *buf, uint16_t size)
 {
 	struct port_config *pc;
@@ -63,7 +111,7 @@ static uint8_t dump_port_status(uint8_t *buf, uint16_t size)
 usbMsgLen_t usbFunctionSetup(uint8_t data[8])
 {
 	struct usbRequest *rq = (void *)data;
-	uint8_t ret;
+	uint16_t ret;
 
 	led_b_toggle();
 
@@ -81,6 +129,10 @@ usbMsgLen_t usbFunctionSetup(uint8_t data[8])
 		return 0;
 	case CUSTOM_RQ_GET_PORT_STATUS:
 		ret = dump_port_status(buf, sizeof(buf));
+		usbMsgPtr = buf;
+		return ret;
+	case CUSTOM_RQ_GET_DM:
+		ret = dump_dm(rq->wIndex.word, buf, sizeof(buf));
 		usbMsgPtr = buf;
 		return ret;
 	case CUSTOM_RQ_RESET:
