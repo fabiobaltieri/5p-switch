@@ -27,6 +27,26 @@ static void reset_cpu(void)
 	for (;;);
 }
 
+static uint16_t dump_vlan(uint8_t *buf, uint16_t size)
+{
+	uint16_t i;
+
+	if (size < 16 * 4)
+		return 0;
+
+	for (i = 0; i < 16; i++) {
+		spi_write(IAC_RD | IAC_VLAN | ((i >> 8) & 0x03), IAC0);
+		spi_write(i & 0xff, IAC1);
+
+		buf[3 + i * 4] = 0x00;
+		buf[2 + i * 4] = spi_read(IDR2);
+		buf[1 + i * 4] = spi_read(IDR1);
+		buf[0 + i * 4] = spi_read(IDR0);
+	}
+
+	return 16 * 4;
+}
+
 static uint16_t dump_dm(uint16_t off, uint8_t *buf, uint16_t size)
 {
 	uint16_t count;
@@ -133,6 +153,10 @@ usbMsgLen_t usbFunctionSetup(uint8_t data[8])
 		return ret;
 	case CUSTOM_RQ_GET_DM:
 		ret = dump_dm(rq->wIndex.word, buf, sizeof(buf));
+		usbMsgPtr = buf;
+		return ret;
+	case CUSTOM_RQ_GET_VLAN:
+		ret = dump_vlan(buf, sizeof(buf));
 		usbMsgPtr = buf;
 		return ret;
 	case CUSTOM_RQ_RESET:

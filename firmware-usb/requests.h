@@ -3,5 +3,7 @@
 #define CUSTOM_RQ_GET_PORT_STATUS	0x02
 /* #define CUSTOM_RQ_SET_PORT_STATUS	0x03 */
 #define CUSTOM_RQ_GET_DM		0x04
+#define CUSTOM_RQ_GET_VLAN		0x05
+/* #define CUSTOM_RQ_SET_VLAN		0x06 */
 
 #define CUSTOM_RQ_RESET			0xff
