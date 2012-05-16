@@ -27,7 +27,7 @@ void spi_init(void)
 		 (0 << CPOL) | (0 << CPHA) |
 		 (0 << SPR1) | (0 << SPR0) );
 	
-	SPSR = ( (1 << SPI2X) );
+	SPSR = ( (0 << SPI2X) );
 }
 
 uint8_t spi_io(uint8_t data)
