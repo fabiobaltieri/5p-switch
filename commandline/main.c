@@ -231,25 +231,57 @@ static void send_reset(usb_dev_handle *handle)
 
 static void usage(char *name)
 {
-	fprintf(stderr, "Usage: %s [-h]\n", name);
+	fprintf(stderr, "Usage: %s -h\n", name);
+	fprintf(stderr, "       %s -R\n", name);
+	fprintf(stderr, "       %s [options]\n", name);
+	fprintf(stderr, "options\n");
+	fprintf(stderr, "  -h         this help\n");
+	fprintf(stderr, "  -R         reset device\n");
+	fprintf(stderr, "  -p         dump port status\n");
+	fprintf(stderr, "  -m         dump mib tables\n");
+	fprintf(stderr, "  -v         dump vlan tables\n");
+	fprintf(stderr, "  -d         dump dynamic MAC table\n");
+	fprintf(stderr, "  -a         dump all (default)\n");
 	exit(1);
 }
+
+#define DUMP_PORTS	0x01
+#define DUMP_MIB	0x02
+#define DUMP_VLAN	0x04
+#define DUMP_DM		0x08
+#define DUMP_ALL	0xff
 
 int main(int argc, char **argv)
 {
 	usb_dev_handle *handle = NULL;
 	int opt;
 	int reset = 0;
+	int dump_flags = 0;
 
 	usb_init();
 
-	while ((opt = getopt(argc, argv, "hR")) != -1) {
+	while ((opt = getopt(argc, argv, "hRpmvda")) != -1) {
 		switch (opt) {
 		case 'h':
 			usage(argv[0]);
 			break;
                 case 'R':
                         reset = 1;
+                        break;
+                case 'p':
+			dump_flags |= DUMP_PORTS;
+                        break;
+                case 'm':
+			dump_flags |= DUMP_MIB;
+                        break;
+                case 'v':
+			dump_flags |= DUMP_VLAN;
+                        break;
+                case 'd':
+			dump_flags |= DUMP_DM;
+                        break;
+                case 'a':
+			dump_flags |= DUMP_ALL;
                         break;
 		default:
 			usage(argv[0]);
@@ -269,13 +301,25 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
-	ksz_dump_port_status(handle);
-	printf("\n");
-	ksz_dump_dm(handle);
-	printf("\n");
-	ksz_dump_vlan(handle);
-	printf("\n");
-	ksz_dump_mib(handle);
+	if (!dump_flags)
+		dump_flags = DUMP_ALL;
+
+	if (dump_flags & DUMP_PORTS) {
+		ksz_dump_port_status(handle);
+		printf("\n");
+	}
+	if (dump_flags & DUMP_MIB) {
+		ksz_dump_mib(handle);
+		printf("\n");
+	}
+	if (dump_flags & DUMP_VLAN) {
+		ksz_dump_vlan(handle);
+		printf("\n");
+	}
+	if (dump_flags & DUMP_DM) {
+		ksz_dump_dm(handle);
+		printf("\n");
+	}
 
 	usb_close(handle);
 
