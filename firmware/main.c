@@ -23,6 +23,8 @@
 #include "spi.h"
 #include "commands.h"
 
+#define START_MODE_A 1
+
 #define MAXARGS 32
 static uint8_t argc;
 static char * argv[MAXARGS];
@@ -52,15 +54,15 @@ static void str_to_argc_argv (char * buf, uint8_t * argc, char ** argv, uint8_t 
 static void start_mode_A (void)
 {
   //####################
-  //# 5 -> 1,2 vid=100 #
-  //# 5 -> 3,4 vid=200 #
+  //# 5 -> 1,2,3 vid=100 #
+  //# 5 -> 4     vid=200 #
   //####################
 
-  char * vlan_a = "vlan_set 0 1 0x13 0 0x0064"; // vlan0: valid=1 membership=1,2,5 fid=0 vid=100
+  char * vlan_a = "vlan_set 0 1 0x17 0 0x0064"; // vlan0: valid=1 membership=1,2,3,5 fid=0 vid=100
   str_to_argc_argv(vlan_a, &argc, argv, MAXARGS);
   execute(argc, argv);
 
-  char * vlan_b = "vlan_set 1 1 0x1c 0 0x00c8"; // vlan1: valid=1 membership=3,4,5 fid=0 vid=200
+  char * vlan_b = "vlan_set 1 1 0x18 0 0x00c8"; // vlan1: valid=1 membership=4,5 fid=0 vid=200
   str_to_argc_argv(vlan_b, &argc, argv, MAXARGS);
   execute(argc, argv);
 
@@ -69,7 +71,7 @@ static void start_mode_A (void)
   spi_write(0x23, 0x00);
   spi_write(0x24, 0x64); // port2: vid=100
   spi_write(0x33, 0x00);
-  spi_write(0x34, 0xc8); // port3: vid=200
+  spi_write(0x34, 0x64); // port3: vid=100
   spi_write(0x43, 0x00);
   spi_write(0x44, 0xc8); // port4: vid=200
   spi_write(0x53, 0x00);
